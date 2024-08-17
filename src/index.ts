@@ -1,3 +1,5 @@
 import express from "express";
+import {config as configDotEnv} from "dotenv";
 
-const app = express();
+//Loads the enviroment variables from the .env file
+configDotEnv();
