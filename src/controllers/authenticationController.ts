@@ -84,11 +84,16 @@ export const loginRequest = async (req: Request<{}, {}, LoginRequestModel>, res:
         res.status(400).send({message: "User does not exist"});
         return;
     }
-
-    const compare = await bcrypt.compare(existingUser.password, req.body.password);
+    const hashedPassword = await hashPassword(req.body.password);
+    const compare = await bcrypt.compare(existingUser.password, hashedPassword);
 
     if (!compare) {
         res.status(400).send({message: "Wrong Password"});
+        return;
+    }
+
+    //Should never happen
+    if (!existingUser.userID) {
         return;
     }
 
