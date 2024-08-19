@@ -18,16 +18,16 @@ export const signupRequest = (req: Request<{}, {}, SignupRequestModel>, res: Res
         res.send({message: "Please include a password"})
         return;
     }
-    //3 to 16 characters long and contain only letters, digits, underscores, and hyphens
-    if (!req.body.username.match(/^[a-zA-Z0-9_-]{3,16}$/)) {
-        res.status(400);
-        res.send({message: "Invalid Username/Password"})
+    // Regular expression to validate usernames with 3-16 characters, allowing letters, digits, underscores, and hyphens.
+    const usernameMatcher = /^[a-zA-Z0-9_-]{3,16}$/
+    if (usernameMatcher.test(req.body.username)) {
+        res.status(400).send({message: "Invalid Username/Password"})
         return;
     }
-    //1 number (0-9),1 uppercase letter,1 lowercase letters,1 non-alpha numeric number,8-16 characters with no space
-    if (!req.body.password.match(/^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[^\w\d\s:])([^\s]){8,16}$/)) {
-        res.status(400);
-        res.send({message: "Invalid Username/Password"})
+    // Regular expression to validate passwords with at least one lowercase, one uppercase, one digit, one special character, and a minimum length of 8 characters.
+    const passwordMatcher = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$/;
+    if (!passwordMatcher.test(req.body.password)) {
+        res.status(400).send({message: "Invalid Username/Password"});
         return;
     }
     res.send(req.body);
