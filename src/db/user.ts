@@ -1,4 +1,4 @@
-import {User} from "../src/models/db/User";
+import {User} from "../models/db/User";
 import {getConnection} from "../db";
 import mysql from "mysql2/promise";
 
