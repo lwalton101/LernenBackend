@@ -8,7 +8,6 @@ export function verifyToken(token: string): number {
     try {
         // Verify the token using the secret
         const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
-        console.log(decoded)
         return parseInt(decoded.payload);
     } catch (error) {
         // Handle errors (e.g., token verification failed)
