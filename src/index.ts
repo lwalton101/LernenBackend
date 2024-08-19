@@ -4,11 +4,12 @@ import cors from 'cors';
 import {config as configDotEnv} from "dotenv";
 import authRouter from "./routes/authenticationRouter";
 import logRequestMiddleware from "./middleware/loggerMiddleware";
+import {initDatabase} from "../db";
 
 //Loads the enviroment variables from the .env file
 configDotEnv();
 
-
+initDatabase();
 //Starts the webserver at the port provided in the .env file
 const app = express();
 app.listen(process.env.PORT, () => {
