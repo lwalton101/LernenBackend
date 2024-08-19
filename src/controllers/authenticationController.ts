@@ -5,6 +5,7 @@ import {User} from "../models/db/User";
 import {createUser, getUserByEmail} from "../../db/user";
 import {LoginRequestModel} from "../models/LoginRequestModel";
 import bcrypt from "bcrypt";
+import {createToken} from "../token";
 
 export const testRequest = (req: Request, res: Response) => {
     res.send('This is a test');
@@ -91,5 +92,6 @@ export const loginRequest = async (req: Request<{}, {}, LoginRequestModel>, res:
         return;
     }
 
-
+    const token = createToken(existingUser.userID.toString());
+    res.status(200).send({message: "Logged in successfully!", token: token});
 }
