@@ -3,13 +3,14 @@ import {SignupRequestModel} from "../models/SignupRequestModel";
 import {hashPassword} from "../../hash";
 import {User} from "../models/db/User";
 import {createUser, getUserByEmail} from "../../db/user";
+import {LoginRequestModel} from "../models/LoginRequestModel";
+import bcrypt from "bcrypt";
 
 export const testRequest = (req: Request, res: Response) => {
     res.send('This is a test');
 };
 
 export const signupRequest = async (req: Request<{}, {}, SignupRequestModel>, res: Response) => {
-
     if (!req.body.username) {
         res.status(400);
         res.send({message: "Please include a username"})
@@ -63,3 +64,32 @@ export const signupRequest = async (req: Request<{}, {}, SignupRequestModel>, re
     await createUser(newUser);
     res.status(200).send("Successful!");
 };
+
+export const loginRequest = async (req: Request<{}, {}, LoginRequestModel>, res: Response) => {
+    if (!req.body.password) {
+        res.status(400);
+        res.send({message: "Please include a password"})
+        return;
+    }
+
+    if (!req.body.email) {
+        res.status(400);
+        res.send({message: "Please include an email"})
+        return;
+    }
+
+    const existingUser = await getUserByEmail(req.body.email);
+    if (!existingUser) {
+        res.status(400).send({message: "User does not exist"});
+        return;
+    }
+
+    const compare = await bcrypt.compare(existingUser.password, req.body.password);
+
+    if (!compare) {
+        res.status(400).send({message: "Wrong Password"});
+        return;
+    }
+
+
+}
