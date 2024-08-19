@@ -1,7 +1,9 @@
+export {}
+
 declare global {
     namespace Express {
         interface Request {
-            userID?: string;
+            userID?: number;
         }
     }
 }
