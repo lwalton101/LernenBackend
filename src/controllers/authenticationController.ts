@@ -1,14 +1,18 @@
 import {Request, Response} from 'express';
 import {SignupRequestModel} from "../models/SignupRequestModel";
-import {hashPassword} from "../../hash";
 import {User} from "../models/db/User";
-import {createUser, getUserByEmail} from "../../db/user";
+import {createUser, getUserByEmail} from "../db/user";
 import {LoginRequestModel} from "../models/LoginRequestModel";
 import bcrypt from "bcrypt";
 import {createToken} from "../token";
+import {hashPassword} from "../hash";
 
 export const testRequest = (req: Request, res: Response) => {
     res.send('This is a test');
+};
+
+export const testProtectedRequest = (req: Request, res: Response) => {
+    res.status(200).send(req.userID?.toString());
 };
 
 export const signupRequest = async (req: Request<{}, {}, SignupRequestModel>, res: Response) => {
