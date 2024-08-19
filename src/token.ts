@@ -1,5 +1,17 @@
-import jwt from "jsonwebtoken";
+import jwt, {JwtPayload} from "jsonwebtoken";
 
 export function createToken(payload: string): string {
-    return jwt.sign({data: payload}, process.env.JWT_SECRET as string, {expiresIn: 60 * 60});
+    return jwt.sign(payload, process.env.JWT_SECRET as string, {expiresIn: 60 * 60});
+}
+
+export function verifyToken(token: string): number {
+    try {
+        // Verify the token using the secret
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+        return parseInt(decoded.data);
+    } catch (error) {
+        // Handle errors (e.g., token verification failed)
+        console.error('Token verification failed:', error);
+        throw new Error('Invalid token');
+    }
 }
