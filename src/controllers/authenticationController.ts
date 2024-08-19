@@ -1,5 +1,6 @@
 import {Request, Response} from 'express';
 import {SignupRequestModel} from "../models/SignupRequestModel";
+import {hashPassword} from "../../hash";
 
 export const testRequest = (req: Request, res: Response) => {
     res.send('This is a test');
@@ -30,5 +31,8 @@ export const signupRequest = (req: Request<{}, {}, SignupRequestModel>, res: Res
         res.status(400).send({message: "Invalid Username/Password"});
         return;
     }
+    //Hash password
+    const hashedPassword = hashPassword(req.body.password);
+    console.log(hashedPassword);
     res.send(req.body);
 };
