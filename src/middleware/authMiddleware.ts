@@ -13,7 +13,7 @@ export const authMiddleware = (req: Request<{}, {}, BasicAuthenticatedModel>, re
     try {
         userId = verifyToken(req.body.token);
     } catch (e) {
-        res.status(400).send({message: "Invalid Token"});
+        res.status(401).send({message: "Invalid Token"});
         return;
     }
 
