@@ -1,9 +1,8 @@
 import {NextFunction, Request, Response} from "express";
-import {BasicAuthenticatedModel} from "../models/BasicAuthenticatedModel";
 import {verifyToken} from "../token";
 
-export const authMiddleware = (req: Request<{}, {}, BasicAuthenticatedModel>, res: Response, next: NextFunction): void => {
-    if (!req.body.token) {
+export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+    if (!req.headers.token) {
         res.status(400);
         res.send({message: "Please include a token"})
         return;
@@ -11,7 +10,7 @@ export const authMiddleware = (req: Request<{}, {}, BasicAuthenticatedModel>, re
     let userId;
 
     try {
-        userId = verifyToken(req.body.token);
+        userId = verifyToken(req.headers.token as string);
     } catch (e) {
         res.status(401).send({message: "Invalid Token"});
         return;
