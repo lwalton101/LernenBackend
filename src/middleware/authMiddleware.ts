@@ -3,7 +3,7 @@ import {verifyToken} from "../token";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction): void => {
     if (!req.headers.token) {
-        res.status(400);
+        res.status(401);
         res.send({message: "Please include a token"})
         return;
     }
