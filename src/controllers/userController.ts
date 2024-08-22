@@ -1,5 +1,6 @@
 import {Request, Response} from "express";
 import {getUserByID} from "../db/user";
+import {sanitizeUser} from "../models/db/SanitizedUser";
 
 export const getUserByIDRequest = async (req: Request<{ id: string }>, res: Response) => {
     const userId = parseInt(req.params.id);
@@ -14,6 +15,6 @@ export const getUserByIDRequest = async (req: Request<{ id: string }>, res: Resp
         res.status(400).send({message: "No user found with that id"});
         return;
     }
-
-    res.send(user);
+    const sanitizedUser = sanitizeUser(user);
+    res.send(sanitizedUser);
 };
