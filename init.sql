@@ -3,7 +3,6 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(255),
   email VARCHAR(255),
   password VARCHAR(255),
-  salt VARCHAR(255),
   account_creation_date TIMESTAMP,
   profile_pic VARCHAR(255)
 );
