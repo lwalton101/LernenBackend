@@ -16,7 +16,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction):
         return;
     }
 
-    req.userID = userId;
+    req.userID = userId.toString();
 
     next();
 };
