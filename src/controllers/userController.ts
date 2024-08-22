@@ -18,3 +18,24 @@ export const getUserByIDRequest = async (req: Request<{ id: string }>, res: Resp
     const sanitizedUser = sanitizeUser(user);
     res.send(sanitizedUser);
 };
+
+export const getSelfRequest = async (req: Request, res: Response) => {
+    if (!req.userID) {
+        res.status(401).send({message: "Something went wrong with auth"});
+        return;
+    }
+    const userID = parseInt(req.userID)
+    if (isNaN(userID)) {
+        res.status(400).send({message: "Id must be a number"});
+        return;
+    }
+
+    const user = await getUserByID(userID);
+    if (!user) {
+        //This should never happen as the auth middleware should not allow a request to make it this far without a valid user id
+        res.status(400).send({message: "No user found with that id."});
+        return;
+    }
+    const sanitizedUser = sanitizeUser(user);
+    res.send(sanitizedUser);
+};
