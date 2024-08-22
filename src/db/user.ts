@@ -6,7 +6,7 @@ export async function createUser(user: User) {
     const connection = await getConnection();
 
     const query = `
-        INSERT INTO users (username, email, password, profilePic)
+        INSERT INTO users (username, email, password, profile_pic)
         VALUES (?, ?, ?, ?)
     `;
 
@@ -24,7 +24,7 @@ export async function getUserByEmail(email: string): Promise<User | null> {
     const connection = await getConnection();
 
     const query = `
-        SELECT user_id, username, email, password, accountCreationDate, profilePic
+        SELECT user_id, username, email, password, account_creation_date, profile_pic
         FROM users
         WHERE email = ?
     `;
@@ -48,7 +48,7 @@ export async function getUserByID(id: number): Promise<User | null> {
     const connection = await getConnection();
 
     const query = `
-        SELECT user_id, username, email, password, accountCreationDate, profilePic
+        SELECT user_id, username, email, password, account_creation_date, profile_pic
         FROM users
         WHERE user_id = ?
     `;
