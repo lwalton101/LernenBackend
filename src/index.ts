@@ -5,6 +5,7 @@ import {config as configDotEnv} from "dotenv";
 import authRouter from "./routes/authenticationRouter";
 import logRequestMiddleware from "./middleware/loggerMiddleware";
 import {initDatabase} from "./db";
+import userRouter from "./routes/userRoutes";
 
 //Loads the enviroment variables from the .env file
 configDotEnv();
@@ -23,6 +24,7 @@ app.use(bodyParser.json());
 
 //Routes
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
 app.use(logRequestMiddleware)
 
