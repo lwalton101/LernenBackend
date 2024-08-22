@@ -11,7 +11,7 @@ export async function createUser(user: User) {
     `;
     console.log(query);
 
-    const values = [user.username, user.email, user.password, user.profilePic || null];
+    const values = [user.username, user.email, user.password, user.profile_pic || null];
 
     try {
         const [result] = await connection.execute(query, values);
