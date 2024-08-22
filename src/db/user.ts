@@ -24,7 +24,7 @@ export async function getUserByEmail(email: string): Promise<User | null> {
     const connection = await getConnection();
 
     const query = `
-        SELECT userID, username, email, password, accountCreationDate, profilePic
+        SELECT user_id, username, email, password, accountCreationDate, profilePic
         FROM users
         WHERE email = ?
     `;
@@ -48,9 +48,9 @@ export async function getUserByID(id: number): Promise<User | null> {
     const connection = await getConnection();
 
     const query = `
-        SELECT userID, username, email, password, accountCreationDate, profilePic
+        SELECT user_id, username, email, password, accountCreationDate, profilePic
         FROM users
-        WHERE userID = ?
+        WHERE user_id = ?
     `;
 
     try {
