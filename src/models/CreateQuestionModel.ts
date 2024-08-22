@@ -1,3 +1,5 @@
+import {Subquestion} from "./db/Subquestion";
+
 export interface CreateQuestionModel {
     title: string,
     user_id: string,
