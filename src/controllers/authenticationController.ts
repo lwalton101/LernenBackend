@@ -96,10 +96,10 @@ export const loginRequest = async (req: Request<{}, {}, LoginRequestModel>, res:
     }
 
     //Should never happen
-    if (!existingUser.userID) {
+    if (!existingUser.user_id) {
         return;
     }
 
-    const token = createToken(existingUser.userID.toString());
+    const token = createToken(existingUser.user_id.toString());
     res.status(200).send({message: "Logged in successfully!", token: token});
 }
