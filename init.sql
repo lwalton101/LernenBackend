@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-  user_id INT PRIMARY KEY,
+  user_id INT PRIMARY KEY AUTO_INCREMENT,
   username VARCHAR(255),
   email VARCHAR(255),
   password VARCHAR(255),
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS questions (
-  question_id INT PRIMARY KEY,
+  question_id INT PRIMARY KEY AUTO_INCREMENT,
   title VARCHAR(255),
   user_id INT,
   created_at TIMESTAMP,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS questions (
 );
 
 CREATE TABLE IF NOT EXISTS subquestions (
-  subquestion_id INT PRIMARY KEY,
+  subquestion_id INT PRIMARY KEY AUTO_INCREMENT,
   question_id INT,
   type INT,
   question_num INT,
@@ -35,12 +35,12 @@ CREATE TABLE IF NOT EXISTS subquestions (
 );
 
 CREATE TABLE IF NOT EXISTS tags (
-  tag_id INT PRIMARY KEY,
+  tag_id INT PRIMARY KEY AUTO_INCREMENT,
   tag_name VARCHAR(255)
 );
 
 CREATE TABLE IF NOT EXISTS questiontags (
-  question_tag_id INT PRIMARY KEY,
+  question_tag_id INT PRIMARY KEY AUTO_INCREMENT,
   question_id INT,
   tag_id INT,
   FOREIGN KEY (question_id) REFERENCES questions(question_id),

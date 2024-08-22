@@ -9,6 +9,7 @@ export async function createUser(user: User) {
         INSERT INTO users (username, email, password, profile_pic)
         VALUES (?, ?, ?, ?)
     `;
+    console.log(query);
 
     const values = [user.username, user.email, user.password, user.profilePic || null];
 
