@@ -1,17 +1,17 @@
 import {User} from "./User";
 
 export interface SanitizedUser {
-    userID?: number;
+    user_id?: number;
     username: string;
-    accountCreationDate?: Date;
-    profilePic?: string;
+    account_creation_date?: Date;
+    profile_pic?: string;
 }
 
 export function sanitizeUser(user: User): SanitizedUser {
     return {
-        userID: user.userID,
+        user_id: user.user_id,
         username: user.username,
-        accountCreationDate: user.accountCreationDate,
-        profilePic: user.profilePic
+        account_creation_date: user.account_creation_date,
+        profile_pic: user.profile_pic
     };
 }
