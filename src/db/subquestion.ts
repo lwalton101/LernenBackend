@@ -54,3 +54,27 @@ export async function deleteSubquestionsByQuestionID(question_id: number) {
         return null;
     }
 }
+
+export async function getSubquestionsByQuestionID(questionID: number) {
+    const connection = await getConnection();
+
+    const query = `
+        SELECT *
+        FROM subquestions
+        WHERE question_id = ?;
+    `;
+
+    const values = [questionID];
+    try {
+        const [rows] = await connection.execute(query, values);
+
+        if (Array.isArray(rows) && rows.length > 0) {
+            return rows as Subquestion[];
+        }
+
+        return []; // No question found with the given id
+    } catch (error) {
+        console.error('Error fetching question by id:', error);
+        return null; // Handle error cases gracefully
+    }
+}
