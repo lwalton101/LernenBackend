@@ -32,7 +32,7 @@ export async function updateQuestion(id: number, question: Question) {
 
     const values = [question.title, question.published, id];
     try {
-        const [result] = await connection.execute(query, values);
+        await connection.execute(query, values);
     } catch (error) {
         console.error('Error creating question:', error);
         return null;
