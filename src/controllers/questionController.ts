@@ -47,7 +47,7 @@ export const createQuestionRequest = async (req: Request<{}, {}, CreateQuestionM
         }
     }
 
-    res.send({message: "Creating question"})
+    res.send({message: "Creating question", id: questionId})
 };
 
 export const updateQuestionRequest = async (req: Request<{ id: string }, {}, CreateQuestionModel>, res: Response) => {
@@ -126,6 +126,7 @@ export const getQuestionRequest = async (req: Request<{ id: string }>, res: Resp
 
     res.send(
         {
+            question_id: questionId,
             title: question.title,
             user_id: question.user_id,
             created_at: question.created_at,
