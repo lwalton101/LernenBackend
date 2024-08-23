@@ -39,3 +39,18 @@ export async function createSubquestion(subquestion: Subquestion) {
         return null;
     }
 }
+
+export async function deleteSubquestionsByQuestionID(question_id: number) {
+    const connection = await getConnection();
+
+    const query = `
+        DELETE FROM subquestions WHERE question_id = ?;
+    `;
+
+    try {
+        await connection.execute(query, [question_id]);
+    } catch (error) {
+        console.error('Error creating subquestion:', error);
+        return null;
+    }
+}
