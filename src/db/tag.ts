@@ -49,3 +49,27 @@ export async function getTagByName(tagName: string) {
         return null; // Handle error cases gracefully
     }
 }
+
+export async function getTagByID(tagID: string) {
+    const connection = await getConnection();
+
+    const query = `
+        SELECT *
+        FROM tags
+        WHERE tag_id = ?
+    `;
+
+    try {
+        const [rows] = await connection.execute(query, [tagID]);
+
+        // `rows` is an array of objects; we expect at most one row
+        if (Array.isArray(rows) && rows.length > 0) {
+            return rows[0] as Tag;
+        }
+
+        return null; // No user found with the given email
+    } catch (error) {
+        console.error('Error fetching user by email:', error);
+        return null; // Handle error cases gracefully
+    }
+}
