@@ -39,3 +39,18 @@ export async function getTagsByQuestionID(questionID: number) {
         return null; // Handle error cases gracefully
     }
 }
+
+export async function deleteQuestionTagsByQuestionID(question_id: number) {
+    const connection = await getConnection();
+
+    const query = `
+        DELETE FROM questiontags WHERE question_id = ?;
+    `;
+
+    try {
+        await connection.execute(query, [question_id]);
+    } catch (error) {
+        console.error('Error creating subquestion:', error);
+        return null;
+    }
+}
