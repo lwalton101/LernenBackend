@@ -17,7 +17,7 @@ export interface Subquestion {
 
 export function verifySubquestion(subquestion: Subquestion): string {
     if (subquestion.type == null) return "type";
-    if (!subquestion.question_num) return "question_num";
+    if (subquestion.question_num == null) return "question_num";
     if (subquestion.option1 == null) return "option1";
     if (subquestion.option2 == null) return "option2";
     if (subquestion.option3 == null) return "option3";
