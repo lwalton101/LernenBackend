@@ -32,12 +32,8 @@ export async function getTagsByQuestionID(questionID: number) {
     try {
         const [rows] = await connection.execute(query, [questionID]);
 
-        // `rows` is an array of objects; we expect at most one row
-        if (Array.isArray(rows) && rows.length > 0) {
-            return rows[0] as QuestionTag;
-        }
-
-        return null; // No question tag found with the given question id
+        // `rows` is an array of objects; we expect many rows, max 5
+        return rows as QuestionTag[];
     } catch (error) {
         console.error('Error fetching question tag by question id:', error);
         return null; // Handle error cases gracefully
