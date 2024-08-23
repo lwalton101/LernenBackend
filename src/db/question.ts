@@ -38,3 +38,27 @@ export async function updateQuestion(id: number, question: Question) {
         return null;
     }
 }
+
+export async function getQuestion(id: number) {
+    const connection = await getConnection();
+
+    const query = `
+        SELECT *
+        FROM questions
+        WHERE question_id = ?;
+    `;
+
+    const values = [id];
+    try {
+        const [rows] = await connection.execute(query, values);
+
+        if (Array.isArray(rows) && rows.length > 0) {
+            return rows[0] as Question;
+        }
+
+        return null; // No question found with the given id
+    } catch (error) {
+        console.error('Error fetching question by id:', error);
+        return null; // Handle error cases gracefully
+    }
+}
