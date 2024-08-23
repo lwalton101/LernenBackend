@@ -34,9 +34,6 @@ export function verifyCreateQuestionModel(model: CreateQuestionModel) {
         return "Please include a creation date!";
     }
 
-    if (!model.published) {
-        return "Please include a published status";
-    }
     if (!model.tags) {
         return "Please include at least one tag!";
     }
