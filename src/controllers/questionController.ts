@@ -1,8 +1,8 @@
 import {Request, Response} from "express";
 import {CreateQuestionModel, verifyCreateQuestionModel} from "../models/CreateQuestionModel";
-import {createQuestion, updateQuestion} from "../db/question";
-import {createSubquestion, deleteSubquestionsByQuestionID} from "../db/subquestion";
-import {createTag} from "../db/tag";
+import {createQuestion, getQuestion, updateQuestion} from "../db/question";
+import {createSubquestion, deleteSubquestionsByQuestionID, getSubquestionsByQuestionID} from "../db/subquestion";
+import {createTag, getTagByID} from "../db/tag";
 import {createQuestionTag, deleteQuestionTagsByQuestionID, getTagsByQuestionID} from "../db/questiontag";
 
 export const createQuestionRequest = async (req: Request<{}, {}, CreateQuestionModel>, res: Response) => {
@@ -91,5 +91,46 @@ export const updateQuestionRequest = async (req: Request<{ id: string }, {}, Cre
     }
 
     res.send({message: "Updated question"})
+};
+
+export const getQuestionRequest = async (req: Request<{ id: string }>, res: Response) => {
+    const questionId = parseInt(req.params.id);
+    if (isNaN(questionId)) {
+        res.status(400).send({message: "Question Id must be a number"});
+        return;
+    }
+
+    const question = await getQuestion(questionId);
+    if (!question) {
+        res.status(400).send({message: "Question doesn't exist"});
+        return;
+    }
+
+    if (!question.published && question.user_id.toString() !== req.userID) {
+        res.status(400).send({message: "Question doesn't exist"});
+    }
+
+    const subquestions = await getSubquestionsByQuestionID(questionId);
+
+    let questionTags = await getTagsByQuestionID(questionId);
+    if (questionTags == null) {
+        res.status(500).send({message: "Unexpected server error"});
+        return;
+    }
+    const tags = [];
+    for (let tagID of questionTags.map((qt) => qt.tag_id)) {
+        const tag = await getTagByID(tagID.toString());
+        tags.push(tag?.tag_name);
+    }
+
+    res.send(
+        {
+            title: question.title,
+            user_id: question.user_id,
+            created_at: question.created_at,
+            published: question.published,
+            tags: tags,
+            subquestions: subquestions
+        })
 };
 
