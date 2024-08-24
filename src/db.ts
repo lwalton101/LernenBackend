@@ -1,23 +1,17 @@
-import mysql, {Connection} from "mysql2/promise"
+import mysql, {Pool} from "mysql2/promise"
 import * as fs from "fs";
 
-export let connection: Connection;
-
-export async function getConnection() {
-    if (!connection) {
-        await initDatabase();
-        return connection;
-    }
-
-    return connection;
-}
+export let pool: Pool;
 
 export async function initDatabase() {
-    connection = await mysql.createConnection({
+    pool = mysql.createPool({
         host: process.env.DB_HOST,
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
-        database: process.env.DATABASE
+        database: process.env.DATABASE,
+        waitForConnections: true,
+        connectionLimit: 10,
+        queueLimit: 0
     });
 
     const sqlCommandsFull = fs.readFileSync("./init.sql", "utf-8").replaceAll(/[\r\n]/g, '');
@@ -28,7 +22,7 @@ export async function initDatabase() {
         }
 
         try {
-            await connection.execute(sqlCommand);
+            await pool.execute(sqlCommand);
         } catch (error) {
             console.error('Error creating table:', error);
         }

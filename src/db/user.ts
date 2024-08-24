@@ -1,10 +1,8 @@
 import {User} from "../models/db/User";
-import {getConnection} from "../db";
 import mysql from "mysql2/promise";
+import {pool} from "../db";
 
 export async function createUser(user: User) {
-    const connection = await getConnection();
-
     const query = `
         INSERT INTO users (username, email, password, profile_pic)
         VALUES (?, ?, ?, ?)
@@ -13,7 +11,7 @@ export async function createUser(user: User) {
     const values = [user.username, user.email, user.password, user.profile_pic || null];
 
     try {
-        const [result] = await connection.execute(query, values);
+        const [result] = await pool.execute(query, values);
         console.log('User created successfully with ID:', (result as mysql.OkPacketParams).insertId);
     } catch (error) {
         console.error('Error creating user:', error);
@@ -21,8 +19,6 @@ export async function createUser(user: User) {
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
-    const connection = await getConnection();
-
     const query = `
         SELECT user_id, username, email, password, account_creation_date, profile_pic
         FROM users
@@ -30,7 +26,7 @@ export async function getUserByEmail(email: string): Promise<User | null> {
     `;
 
     try {
-        const [rows] = await connection.execute(query, [email]);
+        const [rows] = await pool.execute(query, [email]);
 
         // `rows` is an array of objects; we expect at most one row
         if (Array.isArray(rows) && rows.length > 0) {
@@ -45,8 +41,6 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 }
 
 export async function getUserByID(id: number): Promise<User | null> {
-    const connection = await getConnection();
-
     const query = `
         SELECT user_id, username, email, password, account_creation_date, profile_pic
         FROM users
@@ -54,7 +48,7 @@ export async function getUserByID(id: number): Promise<User | null> {
     `;
 
     try {
-        const [rows] = await connection.execute(query, [id]);
+        const [rows] = await pool.execute(query, [id]);
 
         // `rows` is an array of objects; we expect at most one row
         if (Array.isArray(rows) && rows.length > 0) {

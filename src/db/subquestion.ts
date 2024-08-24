@@ -1,10 +1,8 @@
-import {getConnection} from "../db";
 import mysql from "mysql2/promise";
 import {Subquestion} from "../models/db/Subquestion";
+import {pool} from "../db";
 
 export async function createSubquestion(subquestion: Subquestion) {
-    const connection = await getConnection();
-
     const query = `
         INSERT INTO subquestions (
             question_id, type, question_num, text, audio_file_path,
@@ -31,7 +29,7 @@ export async function createSubquestion(subquestion: Subquestion) {
 
     console.log(values);
     try {
-        const [result] = await connection.execute(query, values);
+        const [result] = await pool.execute(query, values);
         console.log('Subquestion created successfully with ID:', (result as mysql.OkPacketParams).insertId);
         return (result as mysql.OkPacketParams).insertId;
     } catch (error) {
@@ -41,14 +39,12 @@ export async function createSubquestion(subquestion: Subquestion) {
 }
 
 export async function deleteSubquestionsByQuestionID(question_id: number) {
-    const connection = await getConnection();
-
     const query = `
         DELETE FROM subquestions WHERE question_id = ?;
     `;
 
     try {
-        await connection.execute(query, [question_id]);
+        await pool.execute(query, [question_id]);
     } catch (error) {
         console.error('Error creating subquestion:', error);
         return null;
@@ -56,8 +52,6 @@ export async function deleteSubquestionsByQuestionID(question_id: number) {
 }
 
 export async function getSubquestionsByQuestionID(questionID: number) {
-    const connection = await getConnection();
-
     const query = `
         SELECT *
         FROM subquestions
@@ -66,7 +60,7 @@ export async function getSubquestionsByQuestionID(questionID: number) {
 
     const values = [questionID];
     try {
-        const [rows] = await connection.execute(query, values);
+        const [rows] = await pool.execute(query, values);
 
         if (Array.isArray(rows) && rows.length > 0) {
             return rows as Subquestion[];

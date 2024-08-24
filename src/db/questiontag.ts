@@ -1,10 +1,8 @@
-import {getConnection} from "../db";
 import mysql from "mysql2/promise";
 import {QuestionTag} from "../models/db/QuestionTag";
+import {pool} from "../db";
 
 export async function createQuestionTag(questionID: number, tagID: number) {
-    const connection = await getConnection();
-
     const query = `
         INSERT INTO questiontags (question_id, tag_id)
         VALUES (?,?)
@@ -13,7 +11,7 @@ export async function createQuestionTag(questionID: number, tagID: number) {
     const values = [questionID, tagID];
 
     try {
-        const [result] = await connection.execute(query, values);
+        const [result] = await pool.execute(query, values);
         console.log('QuestionTag created successfully with ID:', (result as mysql.OkPacketParams).insertId);
     } catch (error) {
         console.error('Error creating Tag:', error);
@@ -21,8 +19,6 @@ export async function createQuestionTag(questionID: number, tagID: number) {
 }
 
 export async function getTagsByQuestionID(questionID: number) {
-    const connection = await getConnection();
-
     const query = `
         SELECT *
         FROM questiontags
@@ -30,7 +26,7 @@ export async function getTagsByQuestionID(questionID: number) {
     `;
 
     try {
-        const [rows] = await connection.execute(query, [questionID]);
+        const [rows] = await pool.execute(query, [questionID]);
 
         // `rows` is an array of objects; we expect many rows, max 5
         return rows as QuestionTag[];
@@ -41,14 +37,12 @@ export async function getTagsByQuestionID(questionID: number) {
 }
 
 export async function deleteQuestionTagsByQuestionID(question_id: number) {
-    const connection = await getConnection();
-
     const query = `
         DELETE FROM questiontags WHERE question_id = ?;
     `;
 
     try {
-        await connection.execute(query, [question_id]);
+        await pool.execute(query, [question_id]);
     } catch (error) {
         console.error('Error creating subquestion:', error);
         return null;
