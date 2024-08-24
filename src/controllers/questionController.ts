@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {CreateQuestionModel, verifyCreateQuestionModel} from "../models/CreateQuestionModel";
-import {createQuestion, updateQuestion} from "../db/question";
+import {createQuestion, pickNRandomQuestions, updateQuestion} from "../db/question";
 import {createSubquestion, deleteSubquestionsByQuestionID} from "../db/subquestion";
 import {createTag} from "../db/tag";
 import {createQuestionTag, deleteQuestionTagsByQuestionID, getTagsByQuestionID} from "../db/questiontag";
@@ -120,4 +120,21 @@ export const getQuestionRequest = async (req: Request<{ id: string }>, res: Resp
 
     return;
 };
+
+export const browseRequest = async (req: Request<{ amount: string }>, res: Response) => {
+    const amount = parseInt(req.params.amount);
+    if (!amount) {
+        res.status(400).send({message: "Amount must be a number"});
+        return;
+    }
+
+    if (!req.userID) {
+        res.status(400).send({message: "This should be impossible!"});
+        return;
+    }
+
+    const questions = await pickNRandomQuestions(amount, req.userID);
+    res.send(questions);
+};
+
 
