@@ -1,9 +1,10 @@
 import {Request, Response} from "express";
 import {CreateQuestionModel, verifyCreateQuestionModel} from "../models/CreateQuestionModel";
-import {createQuestion, getQuestion, updateQuestion} from "../db/question";
-import {createSubquestion, deleteSubquestionsByQuestionID, getSubquestionsByQuestionID} from "../db/subquestion";
-import {createTag, getTagByID} from "../db/tag";
+import {createQuestion, updateQuestion} from "../db/question";
+import {createSubquestion, deleteSubquestionsByQuestionID} from "../db/subquestion";
+import {createTag} from "../db/tag";
 import {createQuestionTag, deleteQuestionTagsByQuestionID, getTagsByQuestionID} from "../db/questiontag";
+import {getFullQuestion} from "../models/db/Question";
 
 export const createQuestionRequest = async (req: Request<{}, {}, CreateQuestionModel>, res: Response) => {
     const error = verifyCreateQuestionModel(req.body);
@@ -101,38 +102,22 @@ export const getQuestionRequest = async (req: Request<{ id: string }>, res: Resp
         return;
     }
 
-    const question = await getQuestion(questionId);
-    if (!question) {
-        res.status(400).send({message: "Question doesn't exist"});
+    if (!req.userID) {
+        res.status(400).send({message: "This should be impossible!"});
         return;
     }
 
-    if (!question.published && question.user_id.toString() !== req.userID) {
-        res.status(400).send({message: "Question doesn't exist"});
+    try {
+        const question = await getFullQuestion(questionId, req.userID);
+        res.status(200).send(question);
+    } catch (e: any) {
+        if (e instanceof Error) {
+            res.status(400).send({message: e.message});
+            return;
+        }
+        res.status(400).send({message: "Unknown error occurred"});
     }
 
-    const subquestions = await getSubquestionsByQuestionID(questionId);
-
-    let questionTags = await getTagsByQuestionID(questionId);
-    if (questionTags == null) {
-        res.status(500).send({message: "Unexpected server error"});
-        return;
-    }
-    const tags = [];
-    for (let tagID of questionTags.map((qt) => qt.tag_id)) {
-        const tag = await getTagByID(tagID.toString());
-        tags.push(tag?.tag_name);
-    }
-
-    res.send(
-        {
-            question_id: questionId,
-            title: question.title,
-            user_id: question.user_id,
-            created_at: question.created_at,
-            published: question.published,
-            tags: tags,
-            subquestions: subquestions
-        })
+    return;
 };
 
