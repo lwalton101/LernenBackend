@@ -19,4 +19,17 @@ export const submitResultRequest = async (req: Request<{}, {}, { results: Comple
     }
 };
 
+export const getResultRequest = async (req: Request<{ id: string }>, res: Response) => {
+    const enteredSubquestionID = parseInt(req.params.id);
+    if (isNaN(enteredSubquestionID)) {
+        res.status(400).send({message: "Enter a valid user id!"});
+    }
+    const completedSubquestion = await getCompletedSubquestion(req.userID as string, enteredSubquestionID);
+    if (!completedSubquestion) {
+        res.status(404).send({message: "You have not completed this question!"});
+        return;
+    }
+    res.status(200).send({message: "Successful!", subquestion: completedSubquestion});
+    return;
+};
 
