@@ -46,3 +46,12 @@ CREATE TABLE IF NOT EXISTS questiontags (
   FOREIGN KEY (question_id) REFERENCES questions(question_id),
   FOREIGN KEY (tag_id) REFERENCES tags(tag_id)
 );
+
+CREATE TABLE IF NOT EXISTS completedsubquestions (
+  completed_subquestion_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT,
+  subquestion_id INT,
+  marks INT,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (subquestion_id) REFERENCES subquestions(subquestion_id)
+);
