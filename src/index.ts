@@ -7,6 +7,7 @@ import logRequestMiddleware from "./middleware/loggerMiddleware";
 import {initDatabase} from "./db";
 import userRouter from "./routes/userRoutes";
 import questionRouter from "./routes/questionRoutes";
+import resultRouter from "./routes/resultRouter";
 
 //Loads the enviroment variables from the .env file
 configDotEnv();
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 //Routes
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
+app.use("/result", resultRouter);
 app.use("/question", questionRouter);
 
 app.use(logRequestMiddleware)
