@@ -55,3 +55,14 @@ CREATE TABLE IF NOT EXISTS completedsubquestions (
   FOREIGN KEY (user_id) REFERENCES users(user_id),
   FOREIGN KEY (subquestion_id) REFERENCES subquestions(subquestion_id)
 );
+
+
+CREATE TABLE IF NOT EXISTS ratings (
+  rating_id INT PRIMARY KEY AUTO_INCREMENT,
+  user_id INT,
+  question_id INT,
+  difficulty INT,
+  readability INT,
+  FOREIGN KEY (user_id) REFERENCES users(user_id),
+  FOREIGN KEY (question_id) REFERENCES questions(question_id)
+);
