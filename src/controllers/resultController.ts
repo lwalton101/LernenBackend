@@ -16,6 +16,7 @@ export const submitResultRequest = async (req: Request<{}, {}, { results: Comple
 
         await createCompletedSubquestion(req.userID as string, enteredSubquestion.subquestion_id, enteredSubquestion.marks);
         res.send({message: "Submitted results!"});
+        return;
     }
 };
 
@@ -23,6 +24,7 @@ export const getResultRequest = async (req: Request<{ id: string }>, res: Respon
     const enteredSubquestionID = parseInt(req.params.id);
     if (isNaN(enteredSubquestionID)) {
         res.status(400).send({message: "Enter a valid user id!"});
+        return;
     }
     const completedSubquestion = await getCompletedSubquestion(req.userID as string, enteredSubquestionID);
     if (!completedSubquestion) {
