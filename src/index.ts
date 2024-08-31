@@ -8,6 +8,7 @@ import {initDatabase} from "./db";
 import userRouter from "./routes/userRoutes";
 import questionRouter from "./routes/questionRoutes";
 import resultRouter from "./routes/resultRouter";
+import ratingRouter from "./routes/ratingRouter";
 
 //Loads the enviroment variables from the .env file
 configDotEnv();
@@ -29,6 +30,7 @@ app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/result", resultRouter);
 app.use("/question", questionRouter);
+app.use("/rating", ratingRouter);
 
 app.use(logRequestMiddleware)
 
