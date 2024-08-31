@@ -5,7 +5,7 @@ import {uploadRatingRequest} from "../controllers/ratingController";
 //Creates a new router
 const ratingRouter = Router();
 
-ratingRouter.get("/upload", authMiddleware, uploadRatingRequest)
+ratingRouter.post("/upload", authMiddleware, uploadRatingRequest)
 
 //Exports the router for use in other files
 export default ratingRouter;
