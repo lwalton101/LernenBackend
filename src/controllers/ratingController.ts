@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {Rating} from "../models/db/Rating";
-import {uploadOrUpdateRating} from "../db/rating";
+import {getRatingByID, uploadOrUpdateRating} from "../db/rating";
 
 export const uploadRatingRequest = async (req: Request<{}, {}, Rating>, res: Response) => {
     if (!req.userID) {
@@ -25,3 +25,14 @@ export const uploadRatingRequest = async (req: Request<{}, {}, Rating>, res: Res
     await uploadOrUpdateRating(req.body, req.userID)
     res.send(req.body);
 };
+
+export const getRatingRequest = async (req: Request<{ id: string }>, res: Response) => {
+    const questionId = parseInt(req.params.id);
+    if (isNaN(questionId)) {
+        res.status(400).send({message: "Question Id must be a number"});
+        return;
+    }
+
+    const ratings = await getRatingByID(questionId.toString());
+    res.send(ratings)
+}
