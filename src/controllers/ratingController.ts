@@ -23,7 +23,7 @@ export const uploadRatingRequest = async (req: Request<{}, {}, Rating>, res: Res
     }
 
     await uploadOrUpdateRating(req.body, req.userID)
-    res.send(req.body);
+    res.send({message: "Rating sent successfully!"});
 };
 
 export const getRatingRequest = async (req: Request<{ id: string }>, res: Response) => {
