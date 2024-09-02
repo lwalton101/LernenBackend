@@ -1,5 +1,5 @@
 // Function to compute the Levenshtein distance between two strings
-function levenshteinDistance(str1: string, str2: string): number {
+export function levenshteinDistance(str1: string, str2: string): number {
     const len1 = str1.length;
     const len2 = str2.length;
 
