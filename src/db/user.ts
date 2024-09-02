@@ -61,3 +61,24 @@ export async function getUserByID(id: number): Promise<User | null> {
         return null; // Handle error cases gracefully
     }
 }
+
+export async function getAllUsers(): Promise<User[] | null> {
+    const query = `
+        SELECT user_id, username, email, password, account_creation_date, profile_pic
+        FROM users
+    `;
+
+    try {
+        const [rows] = await pool.execute(query);
+
+        // `rows` is an array of objects; we expect at most one row
+        if (Array.isArray(rows) && rows.length > 0) {
+            return rows as User[];
+        }
+
+        return null; // No user found
+    } catch (error) {
+        console.error('Error fetching user by id:', error);
+        return null; // Handle error cases gracefully
+    }
+}
