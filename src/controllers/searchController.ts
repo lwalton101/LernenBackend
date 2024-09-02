@@ -99,5 +99,13 @@ export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res:
     users = users.sort((a, b) => levenshteinDistance(a.username, req.body.SearchQuery) - levenshteinDistance(b.username, req.body.SearchQuery))
     users = users.slice(0, 10);
 
+    if (!req.body.Users) {
+        users = []
+    }
+
+    if (!req.body.Questions) {
+        fullQs = []
+    }
+
     res.status(200).send({message: "Search done!", results: {questions: fullQs, users: users}})
 };
