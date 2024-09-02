@@ -9,6 +9,7 @@ import userRouter from "./routes/userRoutes";
 import questionRouter from "./routes/questionRoutes";
 import resultRouter from "./routes/resultRouter";
 import ratingRouter from "./routes/ratingRouter";
+import searchRouter from "./routes/searchRouter";
 
 //Loads the enviroment variables from the .env file
 configDotEnv();
@@ -31,6 +32,7 @@ app.use("/user", userRouter);
 app.use("/result", resultRouter);
 app.use("/question", questionRouter);
 app.use("/rating", ratingRouter);
+app.use("/search", searchRouter);
 
 app.use(logRequestMiddleware)
 
