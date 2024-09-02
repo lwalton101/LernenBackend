@@ -4,6 +4,7 @@ import {getAllQuestions} from "../db/question";
 import {getFullQuestion} from "../models/db/Question";
 import {levenshteinDistance} from "../levenshtein";
 import {getRatingByID} from "../db/rating";
+import {getAllUsers} from "../db/user";
 
 export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res: Response) => {
     if (req.body.Questions == undefined) {
@@ -90,8 +91,13 @@ export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res:
 
     fullQs = fullQs.sort((a, b) => levenshteinDistance(a.title, req.body.SearchQuery) - levenshteinDistance(b.title, req.body.SearchQuery))
 
+    let users = await getAllUsers()
+    if (!users) {
+        res.status(500).send({message: "Something went wrong"});
+        return;
+    }
+    users = users.sort((a, b) => levenshteinDistance(a.username, req.body.SearchQuery) - levenshteinDistance(b.username, req.body.SearchQuery))
+    users = users.slice(0, 10);
 
-    res.status(200).send({message: "Search done!", results: fullQs})
-
-
+    res.status(200).send({message: "Search done!", results: {questions: fullQs, users: users}})
 };
