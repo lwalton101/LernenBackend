@@ -32,6 +32,10 @@ export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res:
         res.status(400).send({message: "You must have a min readability key!"});
         return;
     }
+    if (req.body.tags == undefined) {
+        res.status(400).send({message: "You must have a tags key!"});
+        return;
+    }
 
     if (!req.userID) {
         res.status(400).send({message: "This should be impossible!"});
@@ -57,6 +61,15 @@ export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res:
             }
             res.status(400).send({message: "Unknown error occurred"});
         }
+    }
+
+    for (let tag of req.body.tags) {
+        fullQs = fullQs.filter((fq) => {
+            if (!fq.tags) {
+                return false;
+            }
+            return (fq.tags as string[]).includes(tag);
+        })
     }
 
     res.status(200).send({message: "Search done!", results: fullQs})
