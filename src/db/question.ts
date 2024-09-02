@@ -57,6 +57,26 @@ export async function getQuestion(id: number) {
     }
 }
 
+export async function getAllQuestions() {
+    const query = `
+        SELECT *
+        FROM questions
+    `;
+
+    try {
+        const [rows] = await pool.execute(query, []);
+
+        if (Array.isArray(rows) && rows.length > 0) {
+            return rows as Question[];
+        }
+
+        return null; // No question found with the given id
+    } catch (error) {
+        console.error('Error fetching question by id:', error);
+        return null; // Handle error cases gracefully
+    }
+}
+
 export async function pickNRandomQuestions(n: number, userID: string) {
     if (n < 1) {
         throw new Error("N must be at least 1");
