@@ -2,6 +2,8 @@ import {Request, Response} from "express";
 import {SearchQueryModel} from "../models/SearchQueryModel";
 import {getAllQuestions} from "../db/question";
 import {getFullQuestion} from "../models/db/Question";
+import {levenshteinDistance} from "../levenshtein";
+import {getRatingByID} from "../db/rating";
 
 export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res: Response) => {
     if (req.body.Questions == undefined) {
@@ -53,6 +55,20 @@ export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res:
     for (let question of questions) {
         try {
             const fullQ = await getFullQuestion(question.question_id as number, req.userID);
+            const rating = await getRatingByID(fullQ.question_id.toString());
+            if (!rating) {
+                res.status(500).send({message: "No ratings found!??"});
+                return;
+            }
+
+            if (rating.difficulty > req.body.maxDifficulty || rating.difficulty < req.body.minDifficulty) {
+                continue;
+            }
+
+            if (rating.readability > req.body.maxReadability || rating.readability < req.body.minReadability) {
+                continue;
+            }
+
             fullQs.push(fullQ);
         } catch (e: any) {
             if (e instanceof Error) {
@@ -71,6 +87,9 @@ export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res:
             return (fq.tags as string[]).includes(tag);
         })
     }
+
+    fullQs = fullQs.sort((a, b) => levenshteinDistance(a.title, req.body.SearchQuery) - levenshteinDistance(b.title, req.body.SearchQuery))
+
 
     res.status(200).send({message: "Search done!", results: fullQs})
 
