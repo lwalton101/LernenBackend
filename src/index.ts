@@ -25,6 +25,7 @@ app.listen(process.env.PORT, () => {
 app.use(cors());
 //This means any data sent in a HTTP request body will be automatically parsed into a JSON object
 app.use(bodyParser.json());
+app.use(express.urlencoded({extended: true}));
 
 //Routes
 app.use("/auth", authRouter);
