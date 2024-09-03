@@ -150,7 +150,11 @@ export const getAllQuestionsByUserRequest = async (req: Request<{ id: string }>,
     }
 
     questions = questions.filter((q) => q.published);
-    res.send(questions);
+    const fullQs = [];
+    for (let question of questions) {
+        fullQs.push(await getFullQuestion(question.question_id as number, question.user_id.toString()))
+    }
+    res.send(fullQs);
 };
 
 
