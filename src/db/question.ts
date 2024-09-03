@@ -57,6 +57,27 @@ export async function getQuestion(id: number) {
     }
 }
 
+export async function getAllQuestionsByUser(user_id: string) {
+    const query = `
+        SELECT *
+        FROM questions
+        WHERE user_id = ?
+    `;
+
+    try {
+        const [rows] = await pool.execute(query, [user_id]);
+
+        if (Array.isArray(rows) && rows.length > 0) {
+            return rows as Question[];
+        }
+
+        return null; // No question found with the given user id
+    } catch (error) {
+        console.error('Error fetching question by id:', error);
+        return null; // Handle error cases gracefully
+    }
+}
+
 export async function getAllQuestions() {
     const query = `
         SELECT *
