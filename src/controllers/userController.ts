@@ -1,5 +1,5 @@
 import {Request, Response} from "express";
-import {getUserByID} from "../db/user";
+import {getUserByID, updateUserColumn} from "../db/user";
 import {sanitizeUser} from "../models/db/SanitizedUser";
 
 export const getUserByIDRequest = async (req: Request<{ id: string }>, res: Response) => {
@@ -38,4 +38,18 @@ export const getSelfRequest = async (req: Request, res: Response) => {
     }
     const sanitizedUser = sanitizeUser(user);
     res.send(sanitizedUser);
+};
+
+export const updateProfilePicRequest = async (req: Request, res: Response) => {
+    if (!req.userID) {
+        res.status(401).send({message: "Something went wrong with auth"});
+        return;
+    }
+
+    if (!req.file) {
+        res.status(400).send({message: "No File was uploaded"});
+        return;
+    }
+    await updateUserColumn("profile_pic", req.userID, req.file.originalname);
+    res.send("sanitizedUser");
 };
