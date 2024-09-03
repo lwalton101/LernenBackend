@@ -100,7 +100,7 @@ export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res:
     users = users.sort((a, b) => levenshteinDistance(a.username, req.body.SearchQuery) - levenshteinDistance(b.username, req.body.SearchQuery))
     users = users.slice(0, 10);
     users = users.map((u) => {
-        delete u.password;
+        u.password = "";
         return u;
     })
 
