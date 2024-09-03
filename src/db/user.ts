@@ -85,11 +85,11 @@ export async function getAllUsers(): Promise<User[] | null> {
 
 export async function updateUserColumn(columnName: string, userID: string, value: string) {
     const query = `
-        UPDATE users SET ? = ? WHERE user_id = ?;
+        UPDATE users SET ${columnName} = ? WHERE user_id = ?;
     `;
 
     try {
-        await pool.execute(query, [columnName, value, userID]);
+        await pool.execute(query, [value, userID]);
     } catch (error) {
         console.error('Error fetching user by id:', error);
         return;
