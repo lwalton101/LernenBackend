@@ -5,6 +5,7 @@ import {getFullQuestion} from "../models/db/Question";
 import {levenshteinDistance} from "../levenshtein";
 import {getRatingByID} from "../db/rating";
 import {getAllUsers} from "../db/user";
+import {FullQuestion} from "../models/FullQuestion";
 
 export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res: Response) => {
     if (req.body.Questions == undefined) {
@@ -52,10 +53,10 @@ export const searchRequest = async (req: Request<{}, {}, SearchQueryModel>, res:
     }
 
     questions = questions.filter((q) => q.published);
-    let fullQs = [];
+    let fullQs: FullQuestion[] = [];
     for (let question of questions) {
         try {
-            const fullQ = await getFullQuestion(question.question_id as number, req.userID);
+            const fullQ: FullQuestion = await getFullQuestion(question.question_id as number, req.userID);
             const rating = await getRatingByID(fullQ.question_id.toString());
             if (!rating) {
                 res.status(500).send({message: "No ratings found!??"});
