@@ -82,3 +82,16 @@ export async function getAllUsers(): Promise<User[] | null> {
         return null; // Handle error cases gracefully
     }
 }
+
+export async function updateUserColumn(columnName: string, userID: string, value: string) {
+    const query = `
+        UPDATE users SET ? = ? WHERE user_id = ?;
+    `;
+
+    try {
+        await pool.execute(query, [columnName, value, userID]);
+    } catch (error) {
+        console.error('Error fetching user by id:', error);
+        return;
+    }
+}
