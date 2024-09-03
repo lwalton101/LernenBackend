@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {CreateQuestionModel, verifyCreateQuestionModel} from "../models/CreateQuestionModel";
-import {createQuestion, pickNRandomQuestions, updateQuestion} from "../db/question";
+import {createQuestion, getAllQuestionsByUser, pickNRandomQuestions, updateQuestion} from "../db/question";
 import {createSubquestion, deleteSubquestionsByQuestionID} from "../db/subquestion";
 import {createTag} from "../db/tag";
 import {createQuestionTag, deleteQuestionTagsByQuestionID, getTagsByQuestionID} from "../db/questiontag";
@@ -134,6 +134,22 @@ export const browseRequest = async (req: Request<{ amount: string }>, res: Respo
     }
 
     const questions = await pickNRandomQuestions(amount, req.userID);
+    res.send(questions);
+};
+
+export const getAllQuestionsByUserRequest = async (req: Request<{ id: string }>, res: Response) => {
+    if (!req.params.id) {
+        res.status(400).send({message: "You must pass an id"});
+        return;
+    }
+
+    let questions = await getAllQuestionsByUser(req.params.id);
+    if (!questions) {
+        res.status(500).send({message: "Internal Server Error"});
+        return;
+    }
+
+    questions = questions.filter((q) => q.published);
     res.send(questions);
 };
 
