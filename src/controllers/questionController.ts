@@ -6,6 +6,7 @@ import {createTag} from "../db/tag";
 import {createQuestionTag, deleteQuestionTagsByQuestionID, getTagsByQuestionID} from "../db/questiontag";
 import {getFullQuestion} from "../models/db/Question";
 import {GenerateAudioModel} from "../models/GenerateAudioModel";
+import {generateAudio} from "../audio";
 
 export const createQuestionRequest = async (req: Request<{}, {}, CreateQuestionModel>, res: Response) => {
     const error = verifyCreateQuestionModel(req.body);
@@ -159,6 +160,7 @@ export const getAllQuestionsByUserRequest = async (req: Request<{ id: string }>,
 };
 
 export const generateAudioRequest = async (req: Request<{}, {}, GenerateAudioModel>, res: Response) => {
+    await generateAudio(req.body.text);
     res.send("test");
 };
 
