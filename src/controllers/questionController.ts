@@ -169,9 +169,13 @@ export const generateAudioRequest = async (req: Request<{}, {}, GenerateAudioMod
         res.status(400).send({message: "You must provide a subquestion_id key."});
         return;
     }
-    await generateAudio(req.body.text);
 
-    const filePath = req.body.text.slice(0, 10) + Date.now().toString() + ".mp3";
+
+    const filePath = await generateAudio(req.body.text);
+    if (!filePath) {
+        res.status(500).send({message: "Internal Server Error!"});
+        return;
+    }
     await updateSubquestionColumn("audio_file_path", req.body.subquestion_id, filePath)
     res.send({message: "Generated Audio", path: filePath});
 };

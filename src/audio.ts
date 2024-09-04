@@ -30,8 +30,10 @@ export async function generateAudio(text: string) {
         return;
     }
     if (audioStream instanceof Readable) {
-        await uploadFile("lernendata", text.slice(0, 15) + ".mp3", audioStream, "audio/mpeg");
+        const filePath = text.slice(0, 15) + Date.now().toString() + ".mp3";
+        await uploadFile("lernendata", filePath, audioStream, "audio/mpeg");
         console.log("Generated Audio")
+        return filePath;
     }
 }
 
