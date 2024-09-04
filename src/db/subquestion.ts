@@ -72,3 +72,16 @@ export async function getSubquestionsByQuestionID(questionID: number) {
         return null; // Handle error cases gracefully
     }
 }
+
+export async function updateSubquestionColumn(columnName: string, subquestionID: string, value: string) {
+    const query = `
+        UPDATE subquestions SET ${columnName} = ? WHERE subquestion_id = ?;
+    `;
+
+    try {
+        await pool.execute(query, [value, subquestionID]);
+    } catch (error) {
+        console.error('Error fetching user by id:', error);
+        return;
+    }
+}
