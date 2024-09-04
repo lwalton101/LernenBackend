@@ -1,6 +1,8 @@
 import {S3Client} from "@aws-sdk/client-s3";
 import multerS3 from "multer-s3"
 import multer from "multer";
+import {StreamingBlobPayloadInputTypes} from "@smithy/types";
+import {Upload} from "@aws-sdk/lib-storage";
 
 export const s3client = new S3Client([
     {
@@ -24,3 +26,24 @@ export const pfpUpload = multer({
         },
     })
 })
+
+export async function uploadFile(bucketName: string, objectKey: string, audioStream: StreamingBlobPayloadInputTypes, contentType: string): Promise<void> {
+    try {
+        // Use the Upload class from @aws-sdk/lib-storage for streaming upload
+        const upload = new Upload({
+            client: s3client,
+            params: {
+                Bucket: bucketName,
+                Key: objectKey,
+                Body: audioStream,
+                ContentType: contentType,
+            },
+        });
+
+        // Await the completion of the upload
+        const s3Response = await upload.done();
+        console.log("File uploaded successfully:", s3Response);
+    } catch (error) {
+        console.error("Error uploading to S3:", error);
+    }
+}
