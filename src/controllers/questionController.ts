@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {CreateQuestionModel, verifyCreateQuestionModel} from "../models/CreateQuestionModel";
 import {createQuestion, getAllQuestionsByUser, pickNRandomQuestions, updateQuestion} from "../db/question";
-import {createSubquestion, deleteSubquestionsByQuestionID} from "../db/subquestion";
+import {createSubquestion, deleteSubquestionsByQuestionID, updateSubquestionColumn} from "../db/subquestion";
 import {createTag} from "../db/tag";
 import {createQuestionTag, deleteQuestionTagsByQuestionID, getTagsByQuestionID} from "../db/questiontag";
 import {getFullQuestion} from "../models/db/Question";
@@ -160,8 +160,20 @@ export const getAllQuestionsByUserRequest = async (req: Request<{ id: string }>,
 };
 
 export const generateAudioRequest = async (req: Request<{}, {}, GenerateAudioModel>, res: Response) => {
+    if (!req.body.text) {
+        res.status(400).send({message: "You must provide a text key."});
+        return;
+    }
+
+    if (!req.body.subquestion_id) {
+        res.status(400).send({message: "You must provide a subquestion_id key."});
+        return;
+    }
     await generateAudio(req.body.text);
-    res.send("test");
+
+    const filePath = req.body.text.slice(0, 10) + Date.now().toString() + ".mp3";
+    await updateSubquestionColumn("audio_file_path", req.body.subquestion_id, filePath)
+    res.send({message: "Generated Audio", path: filePath});
 };
 
 
