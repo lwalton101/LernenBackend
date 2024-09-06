@@ -7,4 +7,6 @@
 3. Creating questions
 4. Browsing questions
 5. Result and Ratings
-6. 
+6. Search
+7. Update User Info
+8. Audio Generation
