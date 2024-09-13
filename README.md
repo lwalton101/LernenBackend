@@ -1,5 +1,6 @@
 # Lernen Backend
 [![](https://tokei.rs/b1/github/lwalton101/LernenBackend)](https://github.com/lwalton101/LernenBackend).
+[![](https://tokei.rs/b1/github/lwalton101/LernenBackend?category=comments)](https://github.com/lwalton101/LernenBackend).
 ### Prototypes
 
 1. Creating environment and authentication
